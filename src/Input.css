@@ -1,0 +1,33 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+
+@layer {
+    @font-face {
+        font-family: "sarbaz";
+        src: url("./../public/fonts/فونت\ سرباز.ttf");
+    }
+}
+
+body {
+    @apply font-sarbaz relative;
+
+}
+
+.nav-active {
+    @apply bg-grayLight relative
+}
+
+.nav-active:before {
+    content: "";
+    width: 6px;
+    height: 100%;
+    position: absolute;
+    left: 0;
+    right: 0;
+    @apply bg-primary
+}
+.active-page {
+    @apply bg-orange-600 text-white
+}
