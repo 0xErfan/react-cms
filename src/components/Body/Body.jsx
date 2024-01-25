@@ -92,7 +92,7 @@ export default function Body() {
 
     const prevePageHandler = () => currentPage > 1 && setCurrentPage(preve => preve - 1)
 
-    const nextPageHandler = () => users.slice(currentPage * rowsPerPage - rowsPerPage, currentPage * rowsPerPage).length > 2 && setCurrentPage(preve => preve + 1)
+    const nextPageHandler = () => users.slice((currentPage + 1) * rowsPerPage - rowsPerPage, (currentPage + 1) * rowsPerPage).length > 0 && setCurrentPage(preve => preve + 1)
 
     return (
         <>
@@ -136,20 +136,22 @@ export default function Body() {
                                             <td><input value={user.age} onChange={e => setUser(preve => ({ ...preve, age: e.target.value }))} className="max-w-[85%] py-1 rounded-sm text-primaryBlack px-2 placeholder:text-center" placeholder="سن" type="text" /></td>
                                             <td><button onClick={addUser} className="flex justify-center w-[90%] hover:bg-primary/75 transition-colors duration-300 m-auto px-2 py-2 bg-primary rounded-sm"><GoPlus className="size-5 shrink-0" /></button></td>
                                         </tr>
-
-                                        {
-                                            users.slice(currentPage * rowsPerPage - rowsPerPage, currentPage * rowsPerPage).map(user => <User onRemove={removeUser} onEdit={editUser} onAdd={addUser} key={user.id} {...user} />)
+                                        
+                                        {   
+                                            users.slice((currentPage) * rowsPerPage - rowsPerPage, (currentPage) * rowsPerPage).length == 0 ? prevePageHandler()
+                                            :
+                                            users.slice((currentPage) * rowsPerPage - rowsPerPage, (currentPage) * rowsPerPage).map(user => <User onRemove={removeUser} onEdit={editUser} onAdd={addUser} key={user.id} {...user} />)
                                         }
 
                                     </table>
 
-                                    <div className={`${users.length > 8 ? "flex" : "hidden"} items-center justify-between py-4 px-2 bg-white rounded-[8px] w-1/3 m-auto mt-4`}>
+                                    <div className={`${users.length > 8 ? "flex" : "hidden"} select-none items-center justify-between py-4 px-2 bg-white rounded-[8px] w-1/3 m-auto mt-4`}>
                                         <div onClick={nextPageHandler} className="text-black duration-200 cursor-pointer transition-all justify-center bg-gray-400 hover:bg-gray-500 rounded-md w-24 py-2 flex items-center gap-2 px-2">
                                             <IoIosArrowRoundBack className="size-7 rotate-180" />
                                             <p>بعد</p>
                                         </div>
                                         <div className="flex items-center text-black gap-8">
-                                            <p className={`py-2 px-4 rounded-md ${users.slice(currentPage * rowsPerPage - rowsPerPage, currentPage * rowsPerPage).length < 2 && "hidden" }`}>{currentPage + 1}</p>
+                                            <p className={`py-2 px-4 rounded-md ${users.slice((currentPage + 1) * rowsPerPage - rowsPerPage, (currentPage + 1) * rowsPerPage).length < 1 && "hidden" }`}>{currentPage + 1}</p>
                                             <p className="active-page py-2 px-4 rounded-md">{currentPage}</p>
                                             <p className={`py-2 px-4 ${currentPage - 1 <= 0 && "hidden"} rounded-md`}>{currentPage - 1}</p>
                                         </div>
