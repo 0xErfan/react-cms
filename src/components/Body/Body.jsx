@@ -6,6 +6,7 @@ import { SiSololearn } from "react-icons/si";
 import { GoPlus } from "react-icons/go";
 import { IoIosArrowRoundBack } from "react-icons/io";
 import ModalForm from "../ModalForm";
+import { TailSpin } from "react-loader-spinner";
 
 export default function Body() {
 
@@ -13,7 +14,7 @@ export default function Body() {
     const [update, setUpdate] = useState(false)
     const [activeModal, setActiveModal] = useState(0)
     const [findUser, setFindUser] = useState([])
-
+    const [loader, setLoader] = useState(0)
     const [user, setUser] = useState({
         id: users.length,
         name: "",
@@ -37,8 +38,9 @@ export default function Body() {
 
     const addUser = () => {
         const { name, lName, userName, email, age } = user
-
+        
         if (name.trim().length && lName.trim().length && userName.trim().length && email.trim().length && age.trim().length) {
+            setLoader(1)
             let data = {
                 id: users.length + 1,
                 name,
@@ -51,7 +53,7 @@ export default function Body() {
             fetch("https://fesharproject-default-rtdb.firebaseio.com/users.json", {
                 method: "POST",
                 body: JSON.stringify(data)
-            }).then(() => setUpdate(preve => !preve)).then(resetValues)
+            }).then(() => setUpdate(preve => !preve)).then(resetValues).then(() => setLoader(0))
         } else {alert("لطفا تمام اطلاعات را وارد کنید!")}
     }
 
@@ -134,7 +136,19 @@ export default function Body() {
                                             <td><input value={user.userName} onChange={e => setUser(preve => ({ ...preve, userName: e.target.value }))} className="max-w-[85%] py-1 rounded-sm text-primaryBlack px-2 placeholder:text-center" placeholder="نام کاربری" type="text" /></td>
                                             <td><input value={user.email} onChange={e => setUser(preve => ({ ...preve, email: e.target.value }))} className="max-w-[85%] py-1 rounded-sm text-primaryBlack px-2 placeholder:text-center" placeholder="ایمیل" type="text" /></td>
                                             <td><input value={user.age} onChange={e => setUser(preve => ({ ...preve, age: e.target.value }))} className="max-w-[85%] py-1 rounded-sm text-primaryBlack px-2 placeholder:text-center" placeholder="سن" type="text" /></td>
-                                            <td><button onClick={addUser} className="flex justify-center w-[90%] hover:bg-primary/75 transition-colors duration-300 m-auto px-2 py-2 bg-primary rounded-sm"><GoPlus className="size-5 shrink-0" /></button></td>
+                                            <td><button onClick={addUser} className={`flex justify-center w-[90%] hover:bg-primary/75 transition-colors duration-300 m-auto px-2 py-2 bg-primary rounded-sm`}>
+                                                <GoPlus className={`size-5 shrink-0 ${loader ? "hidden" : "block"}`} />
+                                                <TailSpin
+                                                    visible={loader ? true : false}
+                                                    height="20"
+                                                    width="20"
+                                                    color="#4fa94d"
+                                                    ariaLabel="tail-spin-loading"
+                                                    radius="1"
+                                                    wrapperStyle={{}}
+                                                    wrapperClass=""
+                                                />
+                                            </button></td>
                                         </tr>
                                         
                                         {   
