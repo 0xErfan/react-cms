@@ -4,7 +4,7 @@ import { IoReorderThree } from "react-icons/io5";
 export default function Header() {
     return (
         <>
-            <header className="fixed flex top-0 left-0 right-0 items-center justify-between z-40 bg-primary h-20 px-6 shadow-black shadow-regular2 text-white/90">
+            <header className="sticky flex top-0 items-center justify-between z-40 bg-primary h-20 px-6 shadow-black shadow-regular2 text-white/90">
                 <div className="flex items-center max-w-[50%] w-full gap-4">
                     <IoReorderThree className="size-14 cursor-pointer border-l border-black/80 pl-4" />
                     <h2 className="text-xl">Llibanogs-admin</h2>

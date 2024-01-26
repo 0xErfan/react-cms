@@ -1,5 +1,7 @@
+import { ColorRing } from "react-loader-spinner"
+
 export default function ModalForm(props) {
-    const { id, name, lName, userName, email, age } = props.user
+    const { id, name, lName, userName, email, age, loader } = props.user
 
     return (
         <div className={`flex justify-center items-center opacity-0 absolute inset-0 ${props.isActive ? "flex opacity-100" : "hidden"} duration-300 transition-all backdrop-blur-sm bg-transparent`}>
@@ -29,7 +31,15 @@ export default function ModalForm(props) {
                     <input onChange={e => props.onUsersDataChangeHandler([e.target.value, "age"])} value={age} className="border border-primaryBlack" type="text" />
                 </label>
                 <div className="flex items-center gap-2 ch:duration-300 ch:transition-all">
-                    <button onClick={() => props.onSaveEdits(id)} className="text-white w-20 hover:bg-green-700 rounded-md py-2 bg-green-600">ذخیره</button>
+                    <button onClick={() => props.onSaveEdits(id)} className="flex items-center justify-center max-h-10 text-white w-20 hover:bg-green-700 rounded-md py-2 bg-green-600">
+                        <p className={`${props.loader ? "hidden" : "block"}`}>ذخیره</p>
+                        <ColorRing
+                            visible={props.loader ? true : false}
+                            height="35"
+                            width="35"
+                            colors={['#ccc', '#ccc', '#ccc', '#ccc', '#ccc']}
+                        />
+                    </button>
                     <button onClick={props.onCancelEdit} className="text-white w-20 hover:bg-red-700 rounded-md py-2 bg-red-600">لغو</button>
                 </div>
             </div>

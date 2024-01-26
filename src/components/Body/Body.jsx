@@ -4,10 +4,10 @@ import User from "./User";
 import { FaRegUser } from "react-icons/fa";
 import { SiSololearn } from "react-icons/si";
 import { GoPlus } from "react-icons/go";
-import { IoIosArrowRoundBack } from "react-icons/io";
 import ModalForm from "../ModalForm";
-import { TailSpin } from "react-loader-spinner";
-
+import { ColorRing } from "react-loader-spinner";
+import Pagination from "./Pagination";
+import { Link } from "react-router-dom";
 export default function Body() {
 
     const [users, setUsers] = useState([]);
@@ -24,8 +24,8 @@ export default function Body() {
         age: ""
     });
 
-    const [currentPage, setCurrentPage] = useState(1) 
-    const [rowsPerPage] = useState(3)
+    const [currentPage, setCurrentPage] = useState(1)
+    const [rowsPerPage] = useState(8)
 
     useEffect(() => {
         fetch("https://fesharproject-default-rtdb.firebaseio.com/users.json")
@@ -38,7 +38,7 @@ export default function Body() {
 
     const addUser = () => {
         const { name, lName, userName, email, age } = user
-        
+
         if (name.trim().length && lName.trim().length && userName.trim().length && email.trim().length && age.trim().length) {
             setLoader(1)
             let data = {
@@ -54,7 +54,7 @@ export default function Body() {
                 method: "POST",
                 body: JSON.stringify(data)
             }).then(() => setUpdate(preve => !preve)).then(resetValues).then(() => setLoader(0))
-        } else {alert("لطفا تمام اطلاعات را وارد کنید!")}
+        } else { alert("لطفا تمام اطلاعات را وارد کنید!") }
     }
 
     const editUser = id => {
@@ -84,12 +84,14 @@ export default function Body() {
     const saveEdits = id => {
         let findUserToEdit = users.filter(user => user[1].id == id);
         findUserToEdit[0][1] = findUser
+        setLoader(1)
 
         fetch(`https://fesharproject-default-rtdb.firebaseio.com/users/${findUserToEdit[0][0]}.json`, { method: "PUT", body: JSON.stringify(findUserToEdit[0][1]) })
-        .then(() => {
-            setActiveModal(0)
-            setUpdate(preve => !preve);
-        })
+            .then(() => {
+                setActiveModal(0)
+                setLoader()
+                setUpdate(preve => !preve);
+            })
     }
 
     const prevePageHandler = () => currentPage > 1 && setCurrentPage(preve => preve - 1)
@@ -98,22 +100,25 @@ export default function Body() {
 
     return (
         <>
-            <main className="h-screen w-full bg-grayDark text-white relative overflow-y-hidden">
-                <div className="flex pt-20">
-                    <section className="max-w-[6%] xl:max-w-[15%] pt-14 h-screen w-full bg-primaryBlack ">
-                        <ul className="w-full space-y-4 ch:h-12 ch:px-4 text-sm">
-
-                            <li className="flex nav-active items-center gap-2 duration-200 transition-all">
-                                <FaRegUser className="size-6 shrink-0 m-auto sm:m-0" />
-                                <a className="hidden text-xl xl:block" href="#">کاربران</a>
-                            </li>
-                            <li className="flex items-center gap-2 duration-200 transition-all">
-                                <SiSololearn className="size-6 shrink-0 m-auto sm:m-0" />
-                                <a className="hidden text-xl xl:block" href="#">دوره ها</a>
-                            </li>
+            <main className="w-full bg-grayDark text-white relative">
+                <div className="flex">
+                    <section className="flex-[1] bg-primaryBlack ">
+                        <ul className="w-full space-y-4 ch:h-12 ch:px-4 py-12 text-sm">
+                            <Link to={"/"} className="flex nav-active items-center gap-2 duration-200 transition-all">
+                                <li className="flex items-center gap-2 duration-200 transition-all">
+                                    <FaRegUser className="size-6 shrink-0 m-auto sm:m-0" />
+                                    <div className="hidden text-xl xl:block" href="#">کاربران</div>
+                                </li>
+                            </Link>
+                            <Link to={"/courses"} className="flex items-center gap-2 duration-200 transition-all">
+                                <li className="flex items-center gap-2 duration-200 transition-all">
+                                    <SiSololearn className="size-6 shrink-0 m-auto sm:m-0" />
+                                    <a className="hidden text-xl xl:block" href="#">دوره ها</a>
+                                </li>
+                            </Link>
                         </ul>
                     </section>
-                    <section className="max-w-[94%] xl:max-w-[85%] w-full ">
+                    <section className="flex-[6]">
                         <div className="p-8 h-[calc(100vh-160px)]">
                             <div className="bg-grayLight w-full h-[76vh] rounded-md overflow-hidden">
                                 <p className="text-xl bg-[#404040] p-4">مدیریت کاربرها</p>
@@ -138,46 +143,29 @@ export default function Body() {
                                             <td><input value={user.age} onChange={e => setUser(preve => ({ ...preve, age: e.target.value }))} className="max-w-[85%] py-1 rounded-sm text-primaryBlack px-2 placeholder:text-center" placeholder="سن" type="text" /></td>
                                             <td><button onClick={addUser} className={`flex justify-center w-[90%] hover:bg-primary/75 transition-colors duration-300 m-auto px-2 py-2 bg-primary rounded-sm`}>
                                                 <GoPlus className={`size-5 shrink-0 ${loader ? "hidden" : "block"}`} />
-                                                <TailSpin
+                                                <ColorRing
                                                     visible={loader ? true : false}
                                                     height="20"
                                                     width="20"
-                                                    color="#4fa94d"
-                                                    ariaLabel="tail-spin-loading"
-                                                    radius="1"
-                                                    wrapperStyle={{}}
-                                                    wrapperClass=""
+                                                    colors={['#ccc', '#ccc', '#ccc', '#ccc', '#ccc']}
                                                 />
                                             </button></td>
                                         </tr>
-                                        
-                                        {   
+
+                                        {
                                             users.slice((currentPage) * rowsPerPage - rowsPerPage, (currentPage) * rowsPerPage).length == 0 ? prevePageHandler()
-                                            :
-                                            users.slice((currentPage) * rowsPerPage - rowsPerPage, (currentPage) * rowsPerPage).map(user => <User onRemove={removeUser} onEdit={editUser} onAdd={addUser} key={user.id} {...user} />)
+                                                :
+                                                users.slice((currentPage) * rowsPerPage - rowsPerPage, (currentPage) * rowsPerPage).map(user => <User onRemove={removeUser} onEdit={editUser} onAdd={addUser} key={user.id} {...user} />)
                                         }
 
                                     </table>
 
-                                    <div className={`${users.length > 8 ? "flex" : "hidden"} select-none items-center justify-between py-4 px-2 bg-white rounded-[8px] w-1/3 m-auto mt-4`}>
-                                        <div onClick={nextPageHandler} className="text-black duration-200 cursor-pointer transition-all justify-center bg-gray-400 hover:bg-gray-500 rounded-md w-24 py-2 flex items-center gap-2 px-2">
-                                            <IoIosArrowRoundBack className="size-7 rotate-180" />
-                                            <p>بعد</p>
-                                        </div>
-                                        <div className="flex items-center text-black gap-8">
-                                            <p className={`py-2 px-4 rounded-md ${users.slice((currentPage + 1) * rowsPerPage - rowsPerPage, (currentPage + 1) * rowsPerPage).length < 1 && "hidden" }`}>{currentPage + 1}</p>
-                                            <p className="active-page py-2 px-4 rounded-md">{currentPage}</p>
-                                            <p className={`py-2 px-4 ${currentPage - 1 <= 0 && "hidden"} rounded-md`}>{currentPage - 1}</p>
-                                        </div>
-                                        <div onClick={prevePageHandler} className="text-black duration-200 cursor-pointer transition-all justify-center bg-gray-400 hover:bg-gray-500 rounded-md w-24 py-2 flex items-center gap-2 px-2">
-                                            <p>قبل</p>
-                                            <IoIosArrowRoundBack className="size-7" />
-                                        </div>
-                                    </div>
+                                    <Pagination row={rowsPerPage} page={currentPage} onNext={nextPageHandler} onPreve={prevePageHandler} users={[...users]} />
+
                                 </div>
                             </div>
                         </div>
-                        <ModalForm onUsersDataChangeHandler={usersDataChangeHandler} onSaveEdits={saveEdits} onEdit={editUser} onCancelEdit={() => setActiveModal(0)} {...users} user={findUser} isActive={activeModal} />
+                        <ModalForm onUsersDataChangeHandler={usersDataChangeHandler} onSaveEdits={saveEdits} onEdit={editUser} onCancelEdit={() => setActiveModal(0)} {...users} user={findUser} loader={loader} isActive={activeModal} />
                         <Footer />
                     </section>
                 </div>
