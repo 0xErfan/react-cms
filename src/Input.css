@@ -6,7 +6,7 @@
 @layer {
     @font-face {
         font-family: "sarbaz";
-        src: url("./../public/fonts/فونت\ سرباز.ttf");
+        src: url("/fonts/فونت\ سرباز.ttf");
     }
 }
 

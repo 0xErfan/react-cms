@@ -7,7 +7,6 @@ import { GoPlus } from "react-icons/go";
 import ModalForm from "../ModalForm";
 import { ColorRing } from "react-loader-spinner";
 import Pagination from "./Pagination";
-import { Link } from "react-router-dom";
 export default function Body() {
 
     const [users, setUsers] = useState([]);
@@ -108,18 +107,18 @@ export default function Body() {
                 <div className="flex">
                     <section className="flex-[1] bg-primaryBlack ">
                         <ul className="w-full space-y-4 ch:h-12 ch:px-4 py-12 text-sm">
-                            <Link to={"/"} className="flex nav-active items-center gap-2 duration-200 transition-all">
-                                <li className="flex items-center gap-2 duration-200 transition-all">
+                            <div className="flex nav-active items-center gap-2 duration-200 transition-all">
+                                <li className="flex items-center cursor-pointer  gap-2 duration-200 transition-all">
                                     <FaRegUser className="size-6 shrink-0 m-auto sm:m-0" />
                                     <div className="hidden text-xl xl:block" href="#">کاربران</div>
                                 </li>
-                            </Link>
-                            <Link to={"/courses"} className="flex items-center gap-2 duration-200 transition-all">
+                            </div>
+                            <div onClick={() => alert("soon")} className="flex items-center cursor-pointer gap-2 duration-200 transition-all">
                                 <li className="flex items-center gap-2 duration-200 transition-all">
                                     <SiSololearn className="size-6 shrink-0 m-auto sm:m-0" />
                                     <a className="hidden text-xl xl:block" href="#">دوره ها</a>
                                 </li>
-                            </Link>
+                            </div>
                         </ul>
                     </section>
                     <section className="flex-[6]">
