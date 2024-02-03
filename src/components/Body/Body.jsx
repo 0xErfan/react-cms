@@ -28,12 +28,16 @@ export default function Body() {
     const [rowsPerPage] = useState(8)
 
     useEffect(() => {
+        let isAlertShown = true
+
         fetch("https://fesharproject-default-rtdb.firebaseio.com/users.json")
             .then(data => data.json())
             .then(data => {
                 const usersData = data ? Object.entries(data) : []
                 setUsers(usersData)
             })
+            .catch(() => isAlertShown && alert("connection failed, try again using vpn!"))
+            return (() => isAlertShown = false)
     }, [update])
 
     const addUser = () => {
